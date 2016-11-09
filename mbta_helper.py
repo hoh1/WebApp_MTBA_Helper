@@ -30,12 +30,12 @@ def get_lat_long(place_name):
     See https://developers.google.com/maps/documentation/geocoding/
     for Google Maps Geocode API URL formatting requirements.
     """
-    url = GMAPS_BASE_URL + '?address=' + place_name
+    new_name = place_name.replace(" ", "%20")  #convert space to %20;
+    url = GMAPS_BASE_URL + '?address=' + new_name
     place_json = get_json(url)
     lat = place_json['results'][0]['geometry']['location']['lat']
     lon = place_json['results'][0]['geometry']['location']['lng']
     return (lat, lon)
-    
 
 
 def get_nearest_station(latitude, longitude):
@@ -45,7 +45,12 @@ def get_nearest_station(latitude, longitude):
     See http://realtime.mbta.com/Portal/Home/Documents for URL
     formatting requirements for the 'stopsbylocation' API.
     """
-    pass
+    a_list = get_lat_long(place_name)
+    lat, lon = zip(*a_list)
+    url = MBTA_BASE_URL + '?api_key=' + MBTA_DEMO_API_KEY + '&lat=' + lat + '&lon=' + lon + '&format=json'
+    station_json = get_json(url)
+    nearest_station = station_json['stop'][0]['stop_name']
+    return nearest_station
 
 
 def find_stop_near(place_name):
@@ -54,6 +59,7 @@ def find_stop_near(place_name):
     distance from the given place to that stop.
     """
     pass
+
 
 def main():
     place = input()
