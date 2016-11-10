@@ -46,6 +46,7 @@ def get_nearest_station(latitude, longitude):
     See http://realtime.mbta.com/Portal/Home/Documents for URL
     formatting requirements for the 'stopsbylocation' API.
     """
+
     lat = '%f' % latitude
     lon = '%f' % longitude
     url = MBTA_URL + '&lat=' + lat + '&lon=' + lon 
@@ -64,6 +65,7 @@ def find_stop_near(place_name):
     lon = get_lat_long(place_name)[1]
     get_nearest_station(lat, lon)
     print(get_nearest_station(lat, lon)[0] + ' is the nearest station and it is ' + get_nearest_station(lat, lon)[1] + 'miles away from the ' + place_name)
+
 
 def main():
     place = input()
