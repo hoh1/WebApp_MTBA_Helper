@@ -64,14 +64,15 @@ def find_stop_near(place_name):
     lat = get_lat_long(place_name)[0]
     lon = get_lat_long(place_name)[1]
     get_nearest_station(lat, lon)
-    print('[' + get_nearest_station(lat, lon)[0] + ']' + ' is the nearest station and it is '
-     + '[' + get_nearest_station(lat, lon)[1] + ']' + ' miles away from the ' + '[' + place_name + ']')
-            #print the result with the format
+    a = get_nearest_station(lat, lon)[0]  #nearest station
+    b = get_nearest_station(lat, lon)[1]  #distance
+    return (a, b)
 
 def main():
     place = input("Please enter the name of the place!")
-    find_stop_near(place)
+    print("The nearest Station from ", place, " is:")
+    print(find_stop_near(place))
     
     
 if __name__ == '__main__':
-    main()                      # only works with addresses in Boston. Others shows up as out of index
+    main()                  # only works with addresses in Boston. Others shows up as out of index
