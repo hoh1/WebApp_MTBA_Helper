@@ -7,6 +7,7 @@ from pprint import pprint
 GMAPS_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 MBTA_BASE_URL = "http://realtime.mbta.com/developer/api/v2/stopsbylocation"
 MBTA_DEMO_API_KEY = "wX9NwuHnZU2ToO7GmGR9uw"
+MBTA_URL = 'http://realtime.mbta.com/developer/api/v2/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw'
 
 
 # A little bit of scaffolding if you want to use it
@@ -30,12 +31,12 @@ def get_lat_long(place_name):
     See https://developers.google.com/maps/documentation/geocoding/
     for Google Maps Geocode API URL formatting requirements.
     """
-    url = GMAPS_BASE_URL + '?address=' + place_name
+    new_name = place_name.replace(" ", "%20")  #convert space to %20;
+    url = GMAPS_BASE_URL + '?address=' + new_name
     place_json = get_json(url)
     lat = place_json['results'][0]['geometry']['location']['lat']
     lon = place_json['results'][0]['geometry']['location']['lng']
-    return (lat, lon)
-    
+    return [lat, lon]
 
 
 def get_nearest_station(latitude, longitude):
@@ -45,7 +46,13 @@ def get_nearest_station(latitude, longitude):
     See http://realtime.mbta.com/Portal/Home/Documents for URL
     formatting requirements for the 'stopsbylocation' API.
     """
-    pass
+    lat = '%f' % latitude
+    lon = '%f' % longitude
+    url = MBTA_URL + '&lat=' + lat + '&lon=' + lon 
+    station_json = get_json(url)
+    nearest_station = station_json['stop'][0]['stop_name']
+    distance = station_json['stop'][0]['distance']
+    return [nearest_station, distance]
 
 
 def find_stop_near(place_name):
@@ -53,11 +60,15 @@ def find_stop_near(place_name):
     Given a place name or address, return the nearest MBTA stop and the 
     distance from the given place to that stop.
     """
-    pass
+    lat = get_lat_long(place_name)[0]
+    lon = get_lat_long(place_name)[1]
+    get_nearest_station(lat, lon)
+    print(get_nearest_station(lat, lon)[0] + ' is the nearest station and it is ' + get_nearest_station(lat, lon)[1] + 'miles away from the ' + place_name)
 
 def main():
     place = input()
-    print(get_lat_long(place))
-
+    find_stop_near(place)
+    
+    
 if __name__ == '__main__':
-    main()
+    main()                      # only works with addresses in Boston. Others shows up as out of index
